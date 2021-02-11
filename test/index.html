@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>MDN Games: A-Frame demo</title>
+  <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
+</head>
+<body>
+	<a-scene>
+        <a-sky color="#AAAAAA"></a-sky>
+        <a-camera
+  position="0 1 4"
+  cursor-visible="true"
+  cursor-scale="2"
+  cursor-color="#0095DD"
+  cursor-opacity="0.5">
+</a-camera>
+
+
+
+
+
+        </a-scene>
+
+        <script>
+
+            var scene = document.querySelector('a-scene'); //reprezentacja a-scene w js
+            var obj1 = document.createElement('a-cylinder'); //obiekt nr 1 - walec
+            var obj2 = document.createElement('a-box'); //obiekt nr 2 - sześcian
+            
+            obj1.setAttribute('color', '#4400AA'); //atrybuty obiektu 1
+            obj1.setAttribute('height', '2');
+            obj1.setAttribute('radius', '0.75');
+            obj1.setAttribute('position', '-3 0 0');
+
+            obj2.setAttribute('color', '#EE0000'); //atrybuty obiektu 2
+            obj2.setAttribute('position', '3 0 0');
+
+            scene.appendChild(obj1);
+            scene.appendChild(obj2);
+
+
+
+        </script>
+
+</body>
+</html>
