@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Wizualizacja ruchu jednostajnie przyspieszonego</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
+</head>
+<body>
+	<a-scene>
+        <a-camera
+  position="0 1 4"
+  cursor-visible="true"
+  cursor-scale="2"
+  cursor-color="#0095DD"
+  cursor-opacity="0.5">
+    </a-camera>
+
+    <a-assets>
+        <img id="groundTexture" src="https://cdn.aframe.io/a-painter/images/floor.jpg">
+        <img id="skyTexture" src="https://cdn.aframe.io/a-painter/images/sky.jpg">
+      </a-assets>
+      
+      <a-cylinder id="ground" src="#groundTexture" radius="30" height="0.1"></a-cylinder>
+    
+      <a-sky id="background" src="#skyTexture" theta-length="90" radius="30"></a-sky>
+</a-scene>
+
+        <script>
+
+            setInterval(objMove, 10); //cykliczne wywołanie funkcji odpowiedzialnej za ruch
+
+            var scene = document.querySelector('a-scene'); //reprezentacja a-scene w js
+
+            /*Sekcja odpowiedzialna za pola tekstowe i przyciski - ze względu na ułomności WebAR musi być generowana w JavaScript, w przypadku generowania diva w czystym HTML
+            będzie on niewidoczny*/
+            var controlPanel = document.createElement('div'); //div
+            var x0_input = document.createElement('input'); //pole do wprowadzenia pozycji początkowej obiektu
+            var vel_input = document.createElement('input'); //pole do wprowadzenia prędkości początkowej obiektu
+            var acc_input = document.createElement('input'); //pole do wprowadzenia przyspieszenia obiektu
+            var startButton = document.createElement('button'); //przycisk startu
+            var resetButton = document.createElement('button'); //reset animacji
+
+            //Zmienne sterujące procesem
+            var moveStart; //start ruchu
+            var currentTime; //aktualny czas
+            var x0; //pozycja początkowa
+            var vel; //prędkość początkowa
+            var acc; //przyspieszenie
+
+            //Event listener na załadowanie strony
+            document.addEventListener('load', initVars);
+
+            //Ustawienie typu pól tekstowych na numeryczne
+            x0_input.setAttribute('type', 'number');
+            vel_input.setAttribute('type', 'number');
+            acc_input.setAttribute('type', 'number');
+
+            //Ustawienie placeholderów na nazwy poszczególnych parametrów
+            x0_input.setAttribute('placeholder', 'x0');
+            vel_input.setAttribute('placeholder', 'v0');
+            acc_input.setAttribute('placeholder', 'a');
+
+            //Ustawienie minimalnych wartości parametrów
+            x0_input.setAttribute('min', '-10');
+            vel_input.setAttribute('min', '-10');
+            acc_input.setAttribute('min', '-10');
+
+            //Ustawienie maksymalnych wartości parametrów
+            x0_input.setAttribute('max', '10');
+            vel_input.setAttribute('max', '10');
+            acc_input.setAttribute('max', '10');
+
+            //Dodanie poszczególnych pól i przycisków do diva
+            controlPanel.appendChild(x0_input);
+            controlPanel.appendChild(vel_input);
+            controlPanel.appendChild(acc_input);
+            controlPanel.appendChild(startButton);
+            controlPanel.appendChild(resetButton);
+
+            //Dodanie stylów css do poszczególnych pól i przycisków
+            controlPanel.classList.add("controlPanelStyles");
+            startButton.classList.add("buttonStyles");
+            resetButton.classList.add("buttonStyles");
+            x0_input.classList.add("inputStyles");
+            vel_input.classList.add("inputStyles");
+            acc_input.classList.add("inputStyles");
+
+            //Opis przycisków
+            startButton.innerHTML = 'START';
+            resetButton.innerHTML = 'Reset pozycji';
+
+            //Ustawienie event listenerów na przyciski
+            startButton.addEventListener('click', startButtonClicked);
+            resetButton.addEventListener('click', resetButtonClicked);
+            
+            //Dodanie obiektów AR
+            var obj1 = document.createElement('a-sphere'); //obiekt nr 1
+            
+            //Ustawienie atrybutów obiektu 1
+            obj1.setAttribute('color', '#4400AA');
+            obj1.setAttribute('radius', '0.5');
+            obj1.setAttribute('position', '0 2 0');
+
+            //Dodanie obiektów do sceny
+            scene.appendChild(obj1);
+            scene.appendChild(controlPanel);
+
+            //Event listener na kliknięcie startu
+            function startButtonClicked (evt)
+            {
+                moveStart = true;
+                currentTime = 0;
+                x0 = parseFloat(x0_input.value);
+                vel = parseFloat(vel_input.value);
+                acc = parseFloat(acc_input.value);
+            }
+
+            //Event listener na kliknięcie resetu
+            function resetButtonClicked (evt)
+            {
+                obj1.object3D.position.x = x0;
+                moveStart = false;
+                currentTime = 0;
+            }
+
+            //Funkcja odpowiedzialna za ruch obiektów
+            function objMove()
+            {
+                currentTime += 10;
+                if (moveStart == true)
+                {
+                    obj1.object3D.position.x = x0 + vel * (currentTime / 1000) + 0.5 * acc * (currentTime / 1000) * (currentTime / 1000);
+                }
+            }
+
+            //Funkcja inicjalizująca zmienne
+            function initVars()
+            {
+                moveStart = false;
+                currentTime = 0;
+            }
+
+        </script>
+
+</body>
+</html>
